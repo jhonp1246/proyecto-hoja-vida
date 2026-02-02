@@ -1,0 +1,371 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Hoja de Vida Profesional</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'cv/css/style.css' %}">
+</head>
+<body>
+
+  <!-- Barra de herramientas superior -->
+  <div class="toolbar">
+    <button class="btn btn-primary" onclick="window.open('{% url 'cv:print_preview' %}', '_blank', 'width=1000,height=800,scrollbars=yes,resizable=yes');">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 9V2h12v7"></path>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+        <path d="M6 14h12v8H6z"></path>
+      </svg>
+      Imprimir CV
+    </button>
+
+    {% if user.is_authenticated %}
+      <a class="btn btn-secondary" href="/admin/">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+        Panel Admin
+      </a>
+    {% else %}
+      <a class="btn btn-secondary" href="/admin/login/?next=/">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+          <polyline points="10 17 15 12 10 7"></polyline>
+          <line x1="15" y1="12" x2="3" y2="12"></line>
+        </svg>
+        Iniciar sesión
+      </a>
+    {% endif %}
+  </div>
+
+  <!-- Contenedor principal del CV -->
+  <div class="cv-container">
+    
+    <!-- SIDEBAR IZQUIERDA -->
+    <aside class="cv-sidebar">
+      
+      <!-- Avatar y nombre -->
+      <div class="avatar-container">
+        <div class="avatar">
+          {% if perfil.foto %}
+            <img src="{% url 'cv:servir_foto' perfil.id %}" alt="Foto de {{ perfil.nombres }}" style="width:100%; height:100%; object-fit:cover;">
+          {% else %}
+            <div class="avatar-placeholder">
+              <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              Sin foto
+            </div>
+          {% endif %}
+        </div>
+
+        <h1 class="name">{{ perfil.nombres }}</h1>
+
+        <!-- Descripción "Sobre mí" debajo del nombre -->
+        <div class="profile-description">
+          {{ perfil.sobre_mi }}
+        </div>
+      </div>
+
+      <!-- Contacto -->
+      <div class="personal-info">
+        <h3 class="section-title">Contacto</h3>
+
+        <div class="info-item">
+          <div class="info-label">Identificación</div>
+          <div class="info-value">{{ perfil.identificacion }}</div>
+        </div>
+
+        {% if perfil.telefono_fijo %}
+        <div class="info-item">
+          <div class="info-label">Teléfono fijo</div>
+          <div class="info-value">{{ perfil.telefono_fijo }}</div>
+        </div>
+        {% endif %}
+
+        {% if perfil.telefono_movil %}
+        <div class="info-item">
+          <div class="info-label">Teléfono móvil</div>
+          <div class="info-value">{{ perfil.telefono_movil }}</div>
+        </div>
+        {% endif %}
+
+        {% if perfil.email %}
+        <div class="info-item">
+          <div class="info-label">Email</div>
+          <div class="info-value"><a href="mailto:{{ perfil.email }}">{{ perfil.email }}</a></div>
+        </div>
+        {% endif %}
+
+        {% if perfil.direccion %}
+        <div class="info-item">
+          <div class="info-label">Dirección</div>
+          <div class="info-value">{{ perfil.direccion }}</div>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Datos personales -->
+      <div class="personal-info">
+        <h3 class="section-title">Datos personales</h3>
+
+        <div class="info-item">
+          <div class="info-label">Nacionalidad</div>
+          <div class="info-value">{{ perfil.nacionalidad }}</div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">Lugar de nacimiento</div>
+          <div class="info-value">{{ perfil.lugar_nacimiento }}</div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">Fecha de nacimiento</div>
+          <div class="info-value">{{ perfil.fecha_nacimiento|date:"d/m/Y" }}</div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">Edad</div>
+          <div class="info-value">{{ perfil.edad }} años</div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">Sexo</div>
+          <div class="info-value">{{ perfil.get_sexo_display }}</div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">Estado civil</div>
+          <div class="info-value">{{ perfil.estado_civil }}</div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">Licencia</div>
+          <div class="info-value">{% if perfil.licencia_conducir %}Sí{% if perfil.tipo_licencia %} - Tipo {{ perfil.tipo_licencia }}{% endif %}{% else %}No{% endif %}</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="cv-content">
+
+      <!-- EXPERIENCIA LABORAL -->
+      {% if experiencias %}
+      <section class="content-section" data-section="experiencia">
+        <h2 class="content-title">Experiencia Laboral</h2>
+
+        {% for exp in experiencias %}
+          <div class="timeline-item">
+            <div class="timeline-year">
+              {{ exp.fecha_inicio.year }}
+            </div>
+
+            <div class="timeline-content">
+              <h3 class="timeline-title">{{ exp.cargo }}</h3>
+              <div class="timeline-subtitle">
+                • {{ exp.empresa }}
+                • {{ exp.fecha_inicio|date:"d/m/Y" }}
+                {% if exp.actualmente_trabajando %}
+                  → Actualidad
+                {% elif exp.fecha_fin %}
+                  → {{ exp.fecha_fin|date:"d/m/Y" }}
+                {% endif %}
+              </div>
+
+              {% if exp.descripcion %}
+                <p class="timeline-description">{{ exp.descripcion }}</p>
+              {% endif %}
+
+              {% if exp.certificado %}
+                <div class="certificate-actions">
+                  <a class="btn btn-outline" href="{% url 'cv:servir_certificado_experiencia' exp.id %}" target="_blank" rel="noopener">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    Vista previa
+                  </a>
+                  <a class="btn btn-primary" href="{% url 'cv:servir_certificado_experiencia' exp.id %}?download=1" download rel="noopener">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Descargar PDF
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </section>
+      {% endif %}
+
+      <!-- CURSOS REALIZADOS -->
+      {% if cursos %}
+      <section class="content-section" data-section="cursos">
+        <h2 class="content-title">Cursos Realizados</h2>
+
+        {% for curso in cursos %}
+          <div class="timeline-item">
+            <div class="timeline-year">
+              {{ curso.fecha_inicio.year }}
+            </div>
+
+            <div class="timeline-content">
+              <h3 class="timeline-title">{{ curso.nombre_curso }}</h3>
+              <div class="timeline-subtitle">
+                {{ curso.institucion }}
+                • {{ curso.fecha_inicio|date:"d/m/Y" }}
+                → {{ curso.fecha_fin|date:"d/m/Y" }}
+                {% if curso.duracion_horas %}({{ curso.duracion_horas }} horas){% endif %}
+              </div>
+
+              {% if curso.descripcion %}
+                <p class="timeline-description">{{ curso.descripcion }}</p>
+              {% endif %}
+
+              {% if curso.certificado %}
+                <div class="certificate-actions">
+                  <a class="btn btn-outline" href="{% url 'cv:servir_certificado_curso' curso.id %}" target="_blank" rel="noopener">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    Vista previa
+                  </a>
+                  <a class="btn btn-primary" href="{% url 'cv:servir_certificado_curso' curso.id %}?download=1" download rel="noopener">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Descargar PDF
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </section>
+      {% endif %}
+
+      <!-- RECONOCIMIENTOS -->
+      {% if reconocimientos %}
+      <section class="content-section" data-section="reconocimientos">
+        <h2 class="content-title">Reconocimientos</h2>
+
+        {% for rec in reconocimientos %}
+          <div class="timeline-item">
+            <div class="timeline-year">
+              {{ rec.fecha.year }}
+            </div>
+
+            <div class="timeline-content">
+              <h3 class="timeline-title">{{ rec.titulo }}</h3>
+              <div class="timeline-subtitle">
+                {{ rec.tipo }}
+                • {{ rec.institucion }}
+                • {{ rec.fecha|date:"d/m/Y" }}
+              </div>
+
+              {% if rec.descripcion %}
+                <p class="timeline-description">{{ rec.descripcion }}</p>
+              {% endif %}
+
+              {% if rec.certificado %}
+                <div class="certificate-actions">
+                  <a class="btn btn-outline" href="{% url 'cv:servir_certificado_reconocimiento' rec.id %}" target="_blank" rel="noopener">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    Vista previa
+                  </a>
+                  <a class="btn btn-primary" href="{% url 'cv:servir_certificado_reconocimiento' rec.id %}?download=1" download rel="noopener">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Descargar PDF
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </section>
+      {% endif %}
+
+      <!-- PRODUCTOS ACADÉMICOS Y LABORALES -->
+      {% if productos_academicos or productos_laborales %}
+      <section class="content-section" data-section="productos">
+        <h2 class="content-title">Productos Académicos y Laborales</h2>
+
+        <div class="products-grid">
+          <!-- Productos Académicos -->
+          <div class="product-column">
+            <h3 class="product-column-title">Académicos</h3>
+
+            {% if productos_academicos %}
+              {% for prod in productos_academicos %}
+                <div class="product-item">
+                  {% for etiqueta in prod.get_etiquetas|slice:":3" %}
+                    <span class="skill-tag">{{ etiqueta }}</span>
+                  {% endfor %}
+                  <h4 class="product-name">{{ prod.nombre }}</h4>
+                  <p class="product-description">{{ prod.descripcion|truncatewords:20 }}</p>
+                  {% if prod.url %}
+                    <a href="{{ prod.url }}" target="_blank" class="btn btn-outline btn-sm">Ver más</a>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="empty-state">No hay productos académicos registrados</div>
+            {% endif %}
+          </div>
+
+          <!-- Productos Laborales -->
+          <div class="product-column">
+            <h3 class="product-column-title">Laborales</h3>
+
+            {% if productos_laborales %}
+              {% for prod in productos_laborales %}
+                <div class="product-item">
+                  <div class="skill-tag">{{ prod.fecha.year }}</div>
+                  <h4 class="product-name">{{ prod.nombre }}</h4>
+                  <p class="product-description">{{ prod.descripcion|truncatewords:20 }}</p>
+                  {% if prod.empresa %}
+                    <p style="font-size: 14px; color: #60a5fa; margin-top: 8px;">Cliente: {{ prod.empresa }}</p>
+                  {% endif %}
+                  {% if prod.url %}
+                    <a href="{{ prod.url }}" target="_blank" class="btn btn-outline btn-sm">Ver más</a>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="empty-state">No hay productos laborales registrados</div>
+            {% endif %}
+          </div>
+        </div>
+      </section>
+      {% endif %}
+
+    </main>
+  </div>
+
+  <!-- Copyright footer -->
+  <div style="text-align: center; padding: 40px 20px; color: #94a3b8; font-size: 14px;">
+    © {{ perfil.fecha_actualizacion.year }} {{ perfil.nombres }}. Todos los derechos reservados.
+  </div>
+
+</body>
+</html>

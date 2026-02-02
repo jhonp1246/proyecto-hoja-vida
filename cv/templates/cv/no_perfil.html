@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sin Perfil</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: linear-gradient(135deg, #1e3a8a, #1e40af); 
+      color: white; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      min-height: 100vh; 
+      margin: 0;
+      text-align: center;
+      padding: 20px;
+    }
+    .container { max-width: 600px; }
+    h1 { font-size: 48px; margin-bottom: 20px; }
+    p { font-size: 18px; color: rgba(255,255,255,0.8); margin-bottom: 30px; }
+    .btn { 
+      display: inline-block; 
+      padding: 12px 30px; 
+      background: white; 
+      color: #1e3a8a; 
+      border-radius: 8px; 
+      text-decoration: none; 
+      font-weight: 600; 
+      transition: all 0.3s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚠️ No hay perfil activo</h1>
+    <p>Aún no se ha creado un perfil profesional. Por favor, ingrese al panel de administración para crear uno.</p>
+    <a href="/admin/" class="btn">Ir al Panel de Administración</a>
+  </div>
+</body>
+</html>
