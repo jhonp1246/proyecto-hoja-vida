@@ -74,6 +74,7 @@ class Perfil(models.Model):
     mostrar_reconocimientos = models.BooleanField('Mostrar reconocimientos', default=True)
     mostrar_productos_academicos = models.BooleanField('Mostrar productos académicos', default=True)
     mostrar_productos_laborales = models.BooleanField('Mostrar productos laborales', default=True)
+    mostrar_venta_garage = models.BooleanField('Mostrar venta garage', default=True)
     
     activo = models.BooleanField('Perfil activo', default=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -232,4 +233,28 @@ class ProductoLaboral(models.Model):
         return self.nombre
 
 
+class VentaGarage(models.Model):
+    """Modelo para artículos en venta"""
+    
+    ESTADO_CHOICES = [
+        ('bueno', 'Bueno'),
+        ('regular', 'Regular'),
+    ]
+    
+    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='ventas_garage')
+    nombre = models.CharField('Nombre del producto', max_length=200)
+    descripcion = models.TextField('Descripción')
+    precio = models.DecimalField('Precio', max_digits=10, decimal_places=2)
+    estado = models.CharField('Estado', max_length=10, choices=ESTADO_CHOICES)
+    fecha_publicacion = models.DateField('Fecha de publicación', validators=[validar_fecha_no_futura])
+    imagen = models.ImageField('Imagen del producto', upload_to='garage/', blank=True, null=True)
+    disponible = models.BooleanField('Disponible', default=True)
+    
+    class Meta:
+        verbose_name = 'Artículo Venta Garage'
+        verbose_name_plural = 'Venta Garage'
+        ordering = ['-fecha_publicacion', '-disponible']
+    
+    def __str__(self):
+        return self.nombre
 

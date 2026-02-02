@@ -9,7 +9,7 @@ from django.utils.safestring import mark_safe
 from django.utils.safestring import mark_safe
 from .models import (
     Perfil, ExperienciaLaboral, CursoRealizado, 
-    Reconocimiento, ProductoAcademico, ProductoLaboral
+    Reconocimiento, ProductoAcademico, ProductoLaboral, VentaGarage
 )
 
 
@@ -192,4 +192,41 @@ class ProductoLaboralAdmin(admin.ModelAdmin):
     preview_tecnologias.short_description = 'Tecnologías'
 
 
-
+@admin.register(VentaGarage)
+class VentaGarageAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'precio', 'estado_display', 'fecha_publicacion', 'disponible', 'preview_imagen')
+    list_filter = ('disponible', 'estado', 'fecha_publicacion')
+    search_fields = ('nombre', 'descripcion')
+    date_hierarchy = 'fecha_publicacion'
+    ordering = ('-fecha_publicacion', '-disponible')
+    
+    fieldsets = (
+        ('Información Básica', {
+            'fields': ('perfil', 'nombre', 'precio')
+        }),
+        ('Detalles', {
+            'fields': ('descripcion', 'estado', 'imagen')
+        }),
+        ('Publicación', {
+            'fields': ('fecha_publicacion', 'disponible'),
+            'description': 'IMPORTANTE: No se permiten fechas futuras.'
+        }),
+    )
+    
+    def estado_display(self, obj):
+        colores = {
+            'bueno': '#28a745',
+            'regular': '#ff9800'
+        }
+        color = colores.get(obj.estado, '#6c757d')
+        return mark_safe(f'<span style="color: {color}; font-weight: bold;">●</span> {obj.get_estado_display()}')
+    estado_display.short_description = 'Estado'
+    
+    def preview_imagen(self, obj):
+        if obj.imagen:
+            return format_html(
+                '<img src="{}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" />',
+                obj.imagen.url
+            )
+        return '-'
+    preview_imagen.short_description = 'Vista previa'

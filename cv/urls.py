@@ -14,6 +14,9 @@ urlpatterns = [
     # Vista de impresión
     path('print-preview/', views.print_preview, name='print_preview'),
     
+    # Vista de venta garage
+    path('garage/', views.garage, name='garage'),
+    
     # Rutas protegidas para servir archivos
     path('protected/perfil/<int:perfil_id>/foto/', views.servir_foto, name='servir_foto'),
     path('protected/experiencia/<int:experiencia_id>/rutacertificado/', views.servir_certificado_experiencia, name='servir_certificado_experiencia'),

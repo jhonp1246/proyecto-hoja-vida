@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, FileResponse
 from django.template.loader import render_to_string
 from django.conf import settings
-from .models import Perfil
+from .models import Perfil, VentaGarage
 import os
 
 
@@ -25,6 +25,7 @@ def index(request):
     reconocimientos = perfil.reconocimientos.all().order_by('-fecha')
     productos_academicos = perfil.productos_academicos.all().order_by('-fecha')
     productos_laborales = perfil.productos_laborales.all().order_by('-fecha')
+    ventas = perfil.ventas_garage.filter(disponible=True).order_by('-fecha_publicacion')
     
     context = {
         'perfil': perfil,
@@ -33,6 +34,7 @@ def index(request):
         'reconocimientos': reconocimientos if perfil.mostrar_reconocimientos else [],
         'productos_academicos': productos_academicos if perfil.mostrar_productos_academicos else [],
         'productos_laborales': productos_laborales if perfil.mostrar_productos_laborales else [],
+        'ventas': ventas if perfil.mostrar_venta_garage else [],
         'user': request.user,
     }
     
@@ -178,4 +180,21 @@ def servir_certificado_reconocimiento(request, reconocimiento_id):
         response['Content-Disposition'] = f'inline; filename="certificado_reconocimiento_{reconocimiento.id}.pdf"'
     
     return response
+
+
+def garage(request):
+    """Vista de venta garage - muestra artículos disponibles"""
+    perfil = Perfil.objects.filter(activo=True).first()
+    
+    if not perfil:
+        return render(request, 'cv/no_perfil.html')
+    
+    ventas = perfil.ventas_garage.filter(disponible=True).order_by('-fecha_publicacion')
+    
+    context = {
+        'perfil': perfil,
+        'ventas': ventas,
+    }
+    
+    return render(request, 'cv/garage.html', context)
 
