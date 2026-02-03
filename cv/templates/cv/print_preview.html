@@ -102,7 +102,7 @@
       <div class="avatar-container">
         <div class="avatar">
           {% if perfil.foto %}
-            <img src="{% url 'cv:servir_foto' perfil.id %}" alt="Foto de {{ perfil.nombres }}">
+            <img src="{{ perfil.foto.url }}" alt="Foto de {{ perfil.nombres }}">
           {% else %}
             <div class="avatar-placeholder">Sin foto</div>
           {% endif %}
