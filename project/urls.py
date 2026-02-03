@@ -2,9 +2,10 @@
 URL configuration for project project.
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+from . import views
 
 # Personalizar títulos del admin (sin mostrar "Django")
 admin.site.site_header = settings.ADMIN_SITE_HEADER
@@ -16,8 +17,12 @@ urlpatterns = [
     path('', include('cv.urls')),
 ]
 
-# Servir archivos media y estáticos
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
+# Servir archivos media en producción y desarrollo
 if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+else:
+    # En producción, usar vista personalizada para servir media files
+    urlpatterns += [
+        re_path(r'^media/(?P<path>.*)$', views.serve_media, name='media'),
+    ]
