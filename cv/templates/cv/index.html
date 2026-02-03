@@ -323,9 +323,14 @@
                   {% endfor %}
                   <h4 class="product-name">{{ prod.nombre }}</h4>
                   <p class="product-description">{{ prod.descripcion|truncatewords:20 }}</p>
-                  {% if prod.url %}
-                    <a href="{{ prod.url }}" target="_blank" class="btn btn-outline btn-sm">Ver más</a>
-                  {% endif %}
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+                    {% if prod.url %}
+                      <a href="{{ prod.url }}" target="_blank" class="btn btn-outline btn-sm">Ver más</a>
+                    {% endif %}
+                    {% if prod.archivo %}
+                      <a href="{{ prod.archivo.url }}" target="_blank" class="btn btn-outline btn-sm" style="background: rgba(96, 165, 250, 0.1);">📄 Ver archivo</a>
+                    {% endif %}
+                  </div>
                 </div>
               {% endfor %}
             {% else %}
@@ -346,9 +351,14 @@
                   {% if prod.empresa %}
                     <p style="font-size: 14px; color: #60a5fa; margin-top: 8px;">Cliente: {{ prod.empresa }}</p>
                   {% endif %}
-                  {% if prod.url %}
-                    <a href="{{ prod.url }}" target="_blank" class="btn btn-outline btn-sm">Ver más</a>
-                  {% endif %}
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+                    {% if prod.url %}
+                      <a href="{{ prod.url }}" target="_blank" class="btn btn-outline btn-sm">Ver más</a>
+                    {% endif %}
+                    {% if prod.archivo %}
+                      <a href="{{ prod.archivo.url }}" target="_blank" class="btn btn-outline btn-sm" style="background: rgba(96, 165, 250, 0.1);">📄 Ver archivo</a>
+                    {% endif %}
+                  </div>
                 </div>
               {% endfor %}
             {% else %}

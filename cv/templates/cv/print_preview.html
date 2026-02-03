@@ -161,6 +161,68 @@
         </div>
       </section>
       {% endif %}
+
+      <!-- ANEXOS: Certificados -->
+      <section class="content-section" id="seccion-anexos" style="page-break-before: always;">
+        <h2 class="content-title" style="text-align: center; margin-bottom: 30px; font-size: 32px; color: #2d2d2d;">ANEXOS</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 40px; font-size: 16px;">Certificados y documentos de respaldo</p>
+
+        {% if experiencias %}
+          {% for exp in experiencias %}
+            {% if exp.certificado %}
+            <div style="margin-bottom: 40px; page-break-inside: avoid;">
+              <h3 style="color: #2d2d2d; font-size: 18px; margin-bottom: 15px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px;">
+                📄 Certificado de Experiencia Laboral: {{ exp.cargo }} - {{ exp.empresa }}
+              </h3>
+              <div style="border: 2px solid #e5e7eb; padding: 15px; border-radius: 8px; background: #f9fafb;">
+                <p><strong>Cargo:</strong> {{ exp.cargo }}</p>
+                <p><strong>Empresa:</strong> {{ exp.empresa }}</p>
+                <p><strong>Período:</strong> {{ exp.fecha_inicio|date:"d/m/Y" }} - {% if exp.fecha_fin %}{{ exp.fecha_fin|date:"d/m/Y" }}{% else %}Actualidad{% endif %}</p>
+                <p style="margin-top: 10px;"><strong>Certificado adjunto:</strong> {{ exp.certificado.name }}</p>
+              </div>
+            </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        {% if cursos %}
+          {% for curso in cursos %}
+            {% if curso.certificado %}
+            <div style="margin-bottom: 40px; page-break-inside: avoid;">
+              <h3 style="color: #2d2d2d; font-size: 18px; margin-bottom: 15px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px;">
+                📄 Certificado de Curso: {{ curso.nombre_curso }}
+              </h3>
+              <div style="border: 2px solid #e5e7eb; padding: 15px; border-radius: 8px; background: #f9fafb;">
+                <p><strong>Curso:</strong> {{ curso.nombre_curso }}</p>
+                <p><strong>Institución:</strong> {{ curso.institucion }}</p>
+                <p><strong>Período:</strong> {{ curso.fecha_inicio|date:"d/m/Y" }} - {{ curso.fecha_fin|date:"d/m/Y" }}</p>
+                {% if curso.duracion_horas %}<p><strong>Duración:</strong> {{ curso.duracion_horas }} horas</p>{% endif %}
+                <p style="margin-top: 10px;"><strong>Certificado adjunto:</strong> {{ curso.certificado.name }}</p>
+              </div>
+            </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        {% if reconocimientos %}
+          {% for rec in reconocimientos %}
+            {% if rec.certificado %}
+            <div style="margin-bottom: 40px; page-break-inside: avoid;">
+              <h3 style="color: #2d2d2d; font-size: 18px; margin-bottom: 15px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px;">
+                📄 Certificado de Reconocimiento: {{ rec.titulo }}
+              </h3>
+              <div style="border: 2px solid #e5e7eb; padding: 15px; border-radius: 8px; background: #f9fafb;">
+                <p><strong>Reconocimiento:</strong> {{ rec.titulo }}</p>
+                <p><strong>Tipo:</strong> {{ rec.get_tipo_reconocimiento_display }}</p>
+                <p><strong>Institución:</strong> {{ rec.institucion }}</p>
+                <p><strong>Fecha:</strong> {{ rec.fecha|date:"d/m/Y" }}</p>
+                <p style="margin-top: 10px;"><strong>Certificado adjunto:</strong> {{ rec.certificado.name }}</p>
+              </div>
+            </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      </section>
     </main>
   </div>
 
@@ -188,6 +250,13 @@
         const el = cv.querySelector(`[data-section="${sec}"]`);
         if (el) el.style.display = secciones[sec] ? 'block' : 'none';
       });
+
+      // Mostrar/ocultar sección de anexos basado en las secciones seleccionadas
+      const anexos = document.getElementById('seccion-anexos');
+      const haySeccionesConCertificados = secciones.experiencia || secciones.cursos || secciones.reconocimientos;
+      if (anexos) {
+        anexos.style.display = haySeccionesConCertificados ? 'block' : 'none';
+      }
     }
   </script>
 
