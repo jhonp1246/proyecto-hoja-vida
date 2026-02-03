@@ -22,6 +22,36 @@
     .checkbox-item input { width: 18px; height: 18px; }
     .print-buttons { display: flex; gap: 12px; margin-top: 20px; }
     .cv-container { margin: 0 auto; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+
+    /* Estilos para impresión */
+    @media print {
+      body { 
+        padding: 0; 
+        background: white; 
+        margin: 0;
+      }
+      .print-controls { 
+        display: none !important; 
+      }
+      .cv-container { 
+        box-shadow: none; 
+        margin: 0;
+        width: 100%;
+      }
+      /* Asegurar que las imágenes de certificados se impriman */
+      img, embed {
+        max-width: 100% !important;
+        page-break-inside: avoid;
+      }
+      /* Forzar salto de página en sección de anexos */
+      #seccion-anexos {
+        page-break-before: always !important;
+      }
+      /* Evitar cortar elementos */
+      .timeline-item, .product-item, div[style*="page-break-inside: avoid"] {
+        page-break-inside: avoid;
+      }
+    }
   </style>
 </head>
 <body>
