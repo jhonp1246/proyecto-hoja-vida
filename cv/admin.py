@@ -23,14 +23,15 @@ class PerfilAdmin(admin.ModelAdmin):
                       'lugar_nacimiento', 'sexo', 'estado_civil', 'foto')
         }),
         ('Contacto', {
-            'fields': ('telefono_fijo', 'telefono_movil', 'email', 'direccion')
+            'fields': ('telefono_convencional', 'telefono_fijo', 'telefono_movil', 'email', 
+                      'direccion', 'direccion_trabajo', 'sitio_web')
         }),
         ('Información Adicional', {
             'fields': ('licencia_conducir', 'tipo_licencia', 'sobre_mi')
         }),
         ('Control de Secciones Visibles', {
             'fields': ('mostrar_experiencia', 'mostrar_cursos', 'mostrar_reconocimientos',
-                      'mostrar_productos_academicos', 'mostrar_productos_laborales'),
+                      'mostrar_productos_academicos', 'mostrar_productos_laborales', 'mostrar_venta_garage'),
             'description': 'Seleccione las secciones que desea mostrar en el CV'
         }),
         ('Estado', {
@@ -59,7 +60,11 @@ class ExperienciaLaboralAdmin(admin.ModelAdmin):
     
     fieldsets = (
         (None, {
-            'fields': ('perfil', 'cargo', 'empresa')
+            'fields': ('perfil', 'cargo', 'empresa', 'lugar_empresa')
+        }),
+        ('Contacto Empresarial', {
+            'fields': ('email_empresa', 'sitio_web_empresa', 'nombre_contacto_empresarial', 
+                      'telefono_contacto_empresarial')
         }),
         ('Fechas', {
             'fields': ('fecha_inicio', 'fecha_fin', 'actualmente_trabajando'),
@@ -90,6 +95,10 @@ class CursoRealizadoAdmin(admin.ModelAdmin):
         (None, {
             'fields': ('perfil', 'nombre_curso', 'institucion')
         }),
+        ('Contacto Patrocinador', {
+            'fields': ('nombre_contacto_auspicia', 'telefono_contacto_auspicia', 
+                      'email_empresa_patrocinadora')
+        }),
         ('Fechas', {
             'fields': ('fecha_inicio', 'fecha_fin', 'duracion_horas'),
             'description': 'IMPORTANTE: La fecha de fin debe ser posterior a la de inicio. No se permiten fechas futuras.'
@@ -110,14 +119,17 @@ class CursoRealizadoAdmin(admin.ModelAdmin):
 class ReconocimientoAdmin(admin.ModelAdmin):
     """Admin para reconocimientos"""
     
-    list_display = ('titulo', 'tipo', 'institucion', 'fecha', 'tiene_certificado')
-    list_filter = ('tipo', 'fecha')
+    list_display = ('titulo', 'tipo_reconocimiento', 'institucion', 'fecha', 'tiene_certificado')
+    list_filter = ('tipo_reconocimiento', 'fecha')
     search_fields = ('titulo', 'institucion', 'descripcion')
     date_hierarchy = 'fecha'
     
     fieldsets = (
         (None, {
-            'fields': ('perfil', 'titulo', 'tipo', 'institucion')
+            'fields': ('perfil', 'titulo', 'tipo_reconocimiento', 'institucion')
+        }),
+        ('Contacto Patrocinador', {
+            'fields': ('nombre_contacto_auspicia', 'telefono_contacto_auspicia')
         }),
         ('Fecha', {
             'fields': ('fecha',),

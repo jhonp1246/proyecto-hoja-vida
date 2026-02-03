@@ -57,10 +57,13 @@ class Perfil(models.Model):
     estado_civil = models.CharField('Estado civil', max_length=20, choices=ESTADO_CIVIL_CHOICES)
     
     # Contacto
-    telefono_fijo = models.CharField('Teléfono fijo', max_length=20, blank=True)
+    telefono_convencional = models.CharField('Teléfono convencional', max_length=15, blank=True)
+    telefono_fijo = models.CharField('Teléfono fijo', max_length=15, blank=True)
     telefono_movil = models.CharField('Teléfono móvil', max_length=20, blank=True)
     email = models.EmailField('Correo electrónico', blank=True)
-    direccion = models.TextField('Dirección', blank=True)
+    direccion = models.TextField('Dirección domiciliaria', blank=True)
+    direccion_trabajo = models.CharField('Dirección de trabajo', max_length=200, blank=True)
+    sitio_web = models.URLField('Sitio web personal', max_length=60, blank=True)
     
     # Otros
     licencia_conducir = models.BooleanField('Tiene licencia de conducir', default=False)
@@ -102,6 +105,11 @@ class ExperienciaLaboral(models.Model):
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='experiencias')
     cargo = models.CharField('Cargo/Puesto', max_length=200)
     empresa = models.CharField('Empresa/Institución', max_length=200)
+    lugar_empresa = models.CharField('Lugar de la empresa', max_length=50, blank=True)
+    email_empresa = models.EmailField('Email de la empresa', max_length=100, blank=True)
+    sitio_web_empresa = models.URLField('Sitio web de la empresa', max_length=100, blank=True)
+    nombre_contacto_empresarial = models.CharField('Nombre de contacto empresarial', max_length=100, blank=True)
+    telefono_contacto_empresarial = models.CharField('Teléfono de contacto empresarial', max_length=60, blank=True)
     fecha_inicio = models.DateField('Fecha de inicio', validators=[validar_fecha_minima_2000])
     fecha_fin = models.DateField('Fecha de fin', validators=[validar_fecha_no_futura], blank=True, null=True)
     actualmente_trabajando = models.BooleanField('Actualmente trabajando aquí', default=False)
@@ -139,7 +147,10 @@ class CursoRealizado(models.Model):
     
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='cursos')
     nombre_curso = models.CharField('Nombre del curso', max_length=300)
-    institucion = models.CharField('Institución', max_length=200)
+    institucion = models.CharField('Institución patrocinadora', max_length=200)
+    nombre_contacto_auspicia = models.CharField('Nombre de contacto que auspicia', max_length=100, blank=True)
+    telefono_contacto_auspicia = models.CharField('Teléfono de contacto que auspicia', max_length=60, blank=True)
+    email_empresa_patrocinadora = models.EmailField('Email empresa patrocinadora', max_length=60, blank=True)
     fecha_inicio = models.DateField('Fecha de inicio', validators=[validar_fecha_minima_2000])
     fecha_fin = models.DateField('Fecha de finalización', validators=[validar_fecha_no_futura])
     duracion_horas = models.IntegerField('Duración (horas)', blank=True, null=True)
@@ -167,10 +178,18 @@ class CursoRealizado(models.Model):
 class Reconocimiento(models.Model):
     """Modelo para reconocimientos y premios"""
     
+    TIPO_RECONOCIMIENTO_CHOICES = [
+        ('Académico', 'Académico'),
+        ('Público', 'Público'),
+        ('Privado', 'Privado'),
+    ]
+    
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='reconocimientos')
     titulo = models.CharField('Título del reconocimiento', max_length=300)
-    tipo = models.CharField('Tipo', max_length=200, help_text='Ej: Premio, Certificado, Mención honorífica')
-    institucion = models.CharField('Institución que otorga', max_length=200)
+    tipo_reconocimiento = models.CharField('Tipo de reconocimiento', max_length=20, choices=TIPO_RECONOCIMIENTO_CHOICES)
+    institucion = models.CharField('Entidad patrocinadora', max_length=200)
+    nombre_contacto_auspicia = models.CharField('Nombre de contacto que auspicia', max_length=100, blank=True)
+    telefono_contacto_auspicia = models.CharField('Teléfono de contacto que auspicia', max_length=60, blank=True)
     fecha = models.DateField('Fecha del reconocimiento', validators=[validar_fecha_no_futura])
     descripcion = models.TextField('Descripción', blank=True)
     certificado = models.FileField('Certificado (PDF/Imagen)', upload_to='certificados/', blank=True, null=True)
