@@ -88,11 +88,11 @@
     </div>
 
     <div class="print-buttons">
-      <button class="btn btn-primary" onclick="imprimirCV()">
+      <button type="button" class="btn btn-primary" id="btn-imprimir">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
         Imprimir
       </button>
-      <button class="btn btn-secondary" onclick="window.close()">Cerrar</button>
+      <button type="button" class="btn btn-secondary" onclick="window.close()">Cerrar</button>
     </div>
   </div>
 
@@ -314,23 +314,40 @@
     }
 
     function imprimirCV() {
+      console.log('Función imprimirCV ejecutada');
       try {
-        // Esperar un momento para que los estilos se apliquen
-        setTimeout(() => {
-          window.print();
-        }, 100);
+        window.print();
       } catch (error) {
         console.error('Error al imprimir:', error);
         alert('Hubo un error al intentar imprimir. Por favor, use Ctrl+P para imprimir manualmente.');
       }
     }
 
-    // Agregar atajo de teclado Ctrl+P
-    document.addEventListener('keydown', function(e) {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
-        e.preventDefault();
-        imprimirCV();
+    // Inicializar cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM cargado, inicializando eventos');
+      
+      // Agregar evento al botón de imprimir
+      const btnImprimir = document.getElementById('btn-imprimir');
+      if (btnImprimir) {
+        console.log('Botón de imprimir encontrado');
+        btnImprimir.addEventListener('click', function(e) {
+          e.preventDefault();
+          console.log('Click en botón imprimir detectado');
+          imprimirCV();
+        });
+      } else {
+        console.error('Botón de imprimir NO encontrado');
       }
+
+      // Agregar atajo de teclado Ctrl+P
+      document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+          e.preventDefault();
+          console.log('Atajo Ctrl+P detectado');
+          imprimirCV();
+        }
+      });
     });
   </script>
 
